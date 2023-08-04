@@ -4,10 +4,10 @@ variable "vm_name" {
   nullable    = false
 }
 
-variable "subnet_id" {
-  type        = string
+variable "subnets" {
+  type        = map(string)
   description = "(Required) The parameter of subnet"
-  nullable    = false
+  default     = {}
 }
 
 variable "location" {
@@ -21,11 +21,4 @@ variable "resource_group" {
   type        = string
   description = "(Required) The name of the resource group in which to create the virtual network."
   nullable    = false
-}
-
-variable "number" {
-  type        = number
-  description = "The number of virtual machine."
-  nullable    = false
-  default     = 1
 }
