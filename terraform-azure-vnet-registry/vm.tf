@@ -4,4 +4,5 @@ module "vm-sample" {
   vm_name        = "MyVM"
   subnets        = module.vnet-sample.subnet_ids
   resource_group = local.resource_group_name
+  public_access  = false
 }
