@@ -1,29 +1,29 @@
 # Network interface
 resource "azurerm_network_interface" "vm_network" {
-  count               = var.number
-  name                = "${var.vm_name}-${count.index+1}-nic"
+  for_each            = var.subnets
+  name                = "${var.vm_name}-${each.key}-nic"
   location            = var.location
   resource_group_name = var.resource_group
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = var.subnet_id
+    subnet_id                     = each.value
     private_ip_address_allocation = "Dynamic"
   }
 }
 
 # VM
-resource "azurerm_linux_virtual_machine" "VM" {
-  count                           = var.number
-  name                            = "${var.vm_name}-${count.index+1}-vm"
+resource "azurerm_linux_virtual_machine" "main" {
+  for_each                        = var.subnets
+  name                            = "${var.vm_name}-${each.key}-vm"
   location                        = var.location
   resource_group_name             = var.resource_group
-  network_interface_ids           = [azurerm_network_interface.vm_network[count.index].id]
+  network_interface_ids           = [azurerm_network_interface.vm_network[each.key].id]
   size                            = "Standard_B1s"
   admin_username                  = "azureuser"
   admin_password                  = "P@ssword"
   disable_password_authentication = false
-  computer_name                   = "${var.vm_name}-${count.index+1}-vm"
+  computer_name                   = "${var.vm_name}-${each.key}-vm"
 
   os_disk {
     caching              = "ReadWrite"
