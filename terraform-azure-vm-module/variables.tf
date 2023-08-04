@@ -22,3 +22,10 @@ variable "resource_group" {
   description = "(Required) The name of the resource group in which to create the virtual network."
   nullable    = false
 }
+
+variable "public_access" {
+  type        = bool
+  description = "The public IP of the virtual machine."
+  nullable    = false
+  default     = false
+}

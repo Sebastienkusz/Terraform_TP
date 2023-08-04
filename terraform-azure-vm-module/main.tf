@@ -1,3 +1,12 @@
+# Public IP
+resource "azurerm_public_ip" "Public_IP_main" {
+  for_each            = var.public_access ? var.subnets : {}
+  name                = "${var.vm_name}-${each.key}-public_ip"
+  resource_group_name = var.resource_group
+  location            = var.location
+  allocation_method   = "Dynamic"
+}
+
 # Network interface
 resource "azurerm_network_interface" "vm_network" {
   for_each            = var.subnets
@@ -9,6 +18,7 @@ resource "azurerm_network_interface" "vm_network" {
     name                          = "internal"
     subnet_id                     = each.value
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = var.public_access ? azurerm_public_ip.Public_IP_main[each.key].id : null
   }
 }
 
